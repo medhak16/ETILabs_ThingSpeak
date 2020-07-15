@@ -33,7 +33,6 @@ class _MyHomePageState extends State<MyHomePage> {
           backgroundColor: Colors.blueGrey,
           centerTitle: true,
         ),
-        
        // backgroundColor: Colors.black,
         body: TabBarView(
           children:<Widget>[
