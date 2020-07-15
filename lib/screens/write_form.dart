@@ -20,112 +20,111 @@ class _WriteFormState extends State<WriteForm> {
   Widget build(BuildContext context) {
     final halfMediaWidth = MediaQuery.of(context).size.width / 2.0;
 
-    return Scaffold(
-      body: ModalProgressHUD(
-        inAsyncCall: _isLoading,
-        child: Container(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  alignment: Alignment.topCenter,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        alignment: Alignment.topCenter,
-                        width: halfMediaWidth,
-                        child: MyTextFormField(
-                          hintText: 'API key',
-                          validator: (String value) {
-                            if (value.isEmpty) {
-                              return 'Enter the API key';
-                            }
-                            return null;
-                          },
-                          onChange: (value) {
-                            model.apiKey = value;
-                          },
-                        ),
+    return ModalProgressHUD(
+      inAsyncCall: _isLoading,
+      child: Container(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                alignment: Alignment.topCenter,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      alignment: Alignment.topCenter,
+                      width: halfMediaWidth,
+                      child: MyTextFormField(
+                        hintText: 'API key',
+                        validator: (String value) {
+                          if (value.isEmpty) {
+                            return 'Enter the API key';
+                          }
+                          return null;
+                        },
+                        onChange: (value) {
+                          model.apiKey = value;
+                        },
                       ),
-                      Container(
-                        alignment: Alignment.topCenter,
-                        width: halfMediaWidth,
-                        child: MyTextFormField(
-                          hintText: 'Field id',
-                          /*validator: (String value) {
+                    ),
+                    Container(
+                      alignment: Alignment.topCenter,
+                      width: halfMediaWidth,
+                      child: MyTextFormField(
+                        hintText: 'Field id',
+                        /*validator: (String value) {
                             if (value.isEmpty) {
                               return 'Enter the field name';
                             }
                             return null;
                           },*/
-                          onChange: (value) {
-                            model.field = value;
-                          },
-                        ),
-                      )
-                    ],
-                  ),
+                        onChange: (value) {
+                          model.field = value;
+                        },
+                      ),
+                    )
+                  ],
                 ),
-                MyTextFormField(
-                  hintText: 'Enter Data Value',
-                  /*validator: (String value) {
+              ),
+              MyTextFormField(
+                hintText: 'Enter Data Value',
+                /*validator: (String value) {
                     if (value.isEmpty) {
                       return 'Enter a channel id';
                     }
                     return null;
                   },*/
-                  onChange: (value) {
-                    model.data = value;
-                  },
-                ),
-                FlatButton(
-                  color: Colors.green,
-                  onPressed: () async {
-                    var response;
+                onChange: (value) {
+                  model.data = value;
+                },
+              ),
+              FlatButton(
+                color: Colors.green,
+                onPressed: () async {
+                  var response;
+                  setState(() {
+                    _isLoading = true;
+                  });
+                  //write call function
+                  debugPrint('Data added ');
+                  response = await _networkService.writeInField(
+                      apiKey: model.apiKey,
+                      fieldValue: model.field,
+                      data: model.data);
+
+                  if (response != null) {
+                    print('response: $response');
+                    var recData = jsonDecode(response);
+                    model.response = recData;
+                    showAlertDialog(context, res: model.response);
+                    //debugPrint('Response is : $recData');
                     setState(() {
-                      _isLoading = true;
+                      _isLoading = false;
                     });
-                    //write call function
-                    debugPrint('Data added ');
-                    response = await _networkService.writeInField(
-                        apiKey: model.apiKey, fieldValue: model.field, data:model.data);
-
-                    if (response != null) {
-                      print('response: $response');
-                      var recData = jsonDecode(response);
-                      model.response=recData;
-                      showAlertDialog(context, res: model.response);
-                      //debugPrint('Response is : $recData');
-                      setState(() {
-                        _isLoading = false;
-                      });
-
-                    } else {
-                      print('response error');
-                      setState(() {
-                        _isLoading = false;
-                      });
-                    }
-                  },
-                  child: Text(
-                    'write',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
+                  } else {
+                    print('response error');
+                    setState(() {
+                      _isLoading = false;
+                    });
+                  }
+                },
+                child: Text(
+                  'write',
+                  style: TextStyle(
+                    color: Colors.white,
                   ),
-                )
-              ],
-            ),
+                ),
+              )
+            ],
           ),
         ),
       ),
     );
   }
 
-  void showAlertDialog(BuildContext context, {var res}){
+  void showAlertDialog(BuildContext context, {var res}) {
     // set up the button
     Widget homeButton = FlatButton(
       child: Text("Home"),
@@ -152,7 +151,6 @@ class _WriteFormState extends State<WriteForm> {
       },
     );
   }
-
 }
 
 class MyTextFormField extends StatelessWidget {

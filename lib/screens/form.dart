@@ -23,8 +23,7 @@ class _TestFormState extends State<TestForm> {
   Widget build(BuildContext context) {
     final halfMediaWidth = MediaQuery.of(context).size.width / 2.0;
 
-    return Scaffold(
-      body: ModalProgressHUD(
+    return ModalProgressHUD(
         inAsyncCall: _isLoading,
         child: Container(
           child: Form(
@@ -189,8 +188,7 @@ class _TestFormState extends State<TestForm> {
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 }
 
