@@ -4,6 +4,7 @@ import 'package:ui_thingspeak/screens/result.dart';
 import '../constant.dart';
 import 'package:ui_thingspeak/screens/form.dart';
 import 'package:ui_thingspeak/screens/write_form.dart';
+import 'package:ui_thingspeak/model/data_model.dart';
 
 import 'form.dart';
 import 'write_form.dart';
@@ -14,6 +15,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -48,9 +50,11 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class HomeScreen extends StatelessWidget {
+
   const HomeScreen({
     Key key,
   }) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
@@ -61,31 +65,87 @@ class HomeScreen extends StatelessWidget {
         //shadowColor: Colors.lightBlue,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          //crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            /* Container(
-              child: Center(
-                child: Text('Here we have some content'),
-              ),
-            ),*/
-            //SizedBox(height:10.0),
-            RaisedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/write_form');
+            MyTextFormField(
+              hintText: 'Channel Id',
+              validator: (String value) {
+                if (value.isEmpty) {
+                  return 'Enter a channel id';
+                }
+                return null;
               },
-              color: Colors.black38,
-              child: Text('Write', style: TextStyle(color: Colors.black)),
+              onChange: (value) {
+                model.channelId = value;
+              },
             ),
-            SizedBox(height: 30.0),
-            RaisedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/form');
+            SizedBox(height: 15.0),
+            MyTextFormField(
+              hintText: 'Read Key',
+              validator: (String value) {
+                    if (value.isEmpty) {
+                      return 'Enter a Read key';
+                    }
+                    return null;
+                  },
+              onChange: (value) {
+                model.readKey = value;
               },
-              color: Colors.black38,
-              child: Text('Read', style: TextStyle(color: Colors.black)),
+            ),
+            SizedBox(height: 15.0),
+            MyTextFormField(
+              hintText: 'Write Key',
+              validator: (String value) {
+                    if (value.isEmpty) {
+                      return 'Enter a Write key';
+                    }
+                    return null;
+                  },
+              onChange: (value) {
+                model.writeKey = value;
+              },
+            ),
+            SizedBox(height: 15.0),
+            FlatButton(
+              color: Colors.blueGrey,
+              onPressed: () => print('hello'),
+              child: Text('Read Channel',
+              style: TextStyle(
+                color: Colors.white
+              ),),
             )
           ],
         ),
+      ),
+    );
+  }
+}
+
+class MyTextFormField extends StatelessWidget {
+  final String hintText;
+  final Function validator;
+  final Function onChange;
+
+  MyTextFormField({
+    this.hintText,
+    this.validator,
+    this.onChange,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: TextFormField(
+        decoration: InputDecoration(
+          hintText: hintText,
+          contentPadding: EdgeInsets.all(15.0),
+          border: InputBorder.none,
+          filled: true,
+          fillColor: Colors.grey[200],
+        ),
+        validator: validator,
+        onChanged: onChange,
       ),
     );
   }
