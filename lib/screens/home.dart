@@ -28,11 +28,12 @@ class _MyHomePageState extends State<MyHomePage> {
            ],),
           title: Text(
             'ThingSpeak',
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),
           ),
           backgroundColor: Colors.blueGrey,
           centerTitle: true,
         ),
+        
        // backgroundColor: Colors.black,
         body: TabBarView(
           children:<Widget>[
