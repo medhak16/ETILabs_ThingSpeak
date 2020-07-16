@@ -42,35 +42,36 @@ class _WriteFormState extends State<WriteForm> {
           key: _formKey,
           child: Column(
             children: <Widget>[
-              Expanded(
-                  //flex: 1,
-                      child: MyTextFormField(
-                        hintText: 'Enter Field Id',
-                        validator: (String value) {
-                          if (value.isEmpty) {
-                            return 'Enter a Field id';
-                          }
-                          return null;
-                        },
-                        onChange: (value) {
-                          model.field = value;
-                        },
+              Row(
+                children: <Widget>[
+                Expanded(
+                  flex: 1,
+                      child: Container(
+                        child: MyTextFormField(
+                          hintText: 'Enter Field Id',
+                          validator: (String value) {
+                            if (value.isEmpty) {
+                              return'Enter a Field id';
+                            }
+                            return null;
+                          },
+                          onChange: (value) {
+                            model.field = value;
+                          },
+                        ),
                       )),
               Expanded(
-                //flex: 2,
-                  child: MyTextFormField(
-                    hintText: 'Enter Data Value',
-                    onChange: (value) {
-                      model.data = value;
-                    },
+                flex: 2,
+                  child: Container(
+                    child: MyTextFormField(
+                      hintText: 'Enter Data Value',
+                      onChange: (value) {
+                        model.data = value;
+                      },
+                    ),
                   ),
               ),
-              //WriteContainer(),
-              //WriteContainer(),
-              //WriteContainer(),
-              //WriteContainer(),
-              //WriteContainer(),
-              //WriteContainer(),
+              ],),
               FlatButton(
                 onPressed: () async {
                   var response;
@@ -147,56 +148,6 @@ class _WriteFormState extends State<WriteForm> {
 
 }
 
-/*
-class WriteContainer extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(4),
-      decoration:
-          BoxDecoration(border: Border.all(color: Colors.black, width: 2.0)),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Expanded(
-            flex: 1,
-              child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.blueAccent.withOpacity(0.50),
-                  ),
-                  child: MyTextFormField(
-                    hintText: 'Enter Field Id',
-                    validator: (String value) {
-                      if (value.isEmpty) {
-                        return 'Enter a Field id';
-                      }
-                      return null;
-                    },
-                    onChange: (value) {
-                      //model.data = value;
-                    },
-                  ))),
-          Expanded(
-            flex: 2,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.blueAccent.withOpacity(0.50),
-              ),
-              margin: EdgeInsets.all(2.5),
-              child: MyTextFormField(
-                hintText: 'Enter Data Value',
-                onChange: (value) {
-                  //model.data = value;
-                },
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-*/
 class MyTextFormField extends StatelessWidget {
   final String hintText;
   final Function validator;
