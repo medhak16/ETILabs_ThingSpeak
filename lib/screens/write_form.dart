@@ -45,7 +45,7 @@ class _WriteFormState extends State<WriteForm> {
                           return null;
                         },
                         onChange: (value) {
-                          model.apiKey = value;
+                         // model.apiKey = value;
                         },
                       ),
                     ),
@@ -89,10 +89,10 @@ class _WriteFormState extends State<WriteForm> {
                   });
                   //write call function
                   debugPrint('Data added ');
-                  response = await _networkService.writeInField(
-                      apiKey: model.apiKey,
-                      fieldValue: model.field,
-                      data: model.data);
+                  // response = await _networkService.writeInField(
+                  //     apiKey: model.apiKey,
+                  //     fieldValue: model.field,
+                  //     data: model.data);
 
                   if (response != null) {
                     print('response: $response');
