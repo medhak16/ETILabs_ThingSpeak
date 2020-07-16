@@ -6,6 +6,7 @@ import 'package:ui_thingspeak/constant.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import '../constant.dart';
 import '../constant.dart';
+import 'dart:convert';
 import '../constant.dart';
 import 'package:ui_thingspeak/services/database_services.dart';
 
@@ -25,8 +26,8 @@ class _TestFormState extends State<TestForm> {
   String channelId;
   String readKey;
 
-  void extractCredentials() async{
-    var mChannel =await _databaseService.getChannelId();
+  void extractCredentials() async {
+    var mChannel = await _databaseService.getChannelId();
     var mreadKey = await _databaseService.getReadKey();
     setState(() {
       channelId = mChannel;
@@ -66,11 +67,22 @@ class _TestFormState extends State<TestForm> {
                       width: 50,
                     ),
                     RaisedButton(
-                        onPressed: () async{
+                        onPressed: () async {
                           var dataResponse =
                               await _networkService.getAllResponseAtOnce(
                                   channelId: channelId, readKey: readKey);
-                         // print('dataResponse');
+
+                          var recData = jsonDecode(dataResponse);
+
+                          int id = recData['channel']['id'];
+                          String name = recData['channel']['name'];
+                          String description =
+                              recData['channel']['description'];
+                          String field1_name = recData['channel']['field1'];
+                          String field2_name = recData['channel']['field2'];
+                          String field3_name = recData['channel']['field3'];
+                          print('id $id and $field1_name');
+                          print(recData);
                         },
                         child: Text(
                           'READ',
