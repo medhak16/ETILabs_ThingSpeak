@@ -26,9 +26,17 @@ class _WriteFormState extends State<WriteForm> {
     //var mChannel = await _databaseService.getChannelId();
     var mwriteKey = await _databaseService.getWriteKey();
     setState(() {
+      print(mwriteKey);
       //channelId = mChannel;
       writeKey = mwriteKey;
     });
+    // print(writeKey);
+  }
+  @override
+  void initState() {
+    extractCredentials();
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
@@ -44,14 +52,14 @@ class _WriteFormState extends State<WriteForm> {
             children: <Widget>[
               Row(
                 children: <Widget>[
-                Expanded(
-                  flex: 1,
+                  Expanded(
+                      flex: 1,
                       child: Container(
                         child: MyTextFormField(
                           hintText: 'Enter Field Id',
                           validator: (String value) {
                             if (value.isEmpty) {
-                              return'Enter a Field id';
+                              return 'Enter a Field id';
                             }
                             return null;
                           },
@@ -60,40 +68,41 @@ class _WriteFormState extends State<WriteForm> {
                           },
                         ),
                       )),
-              Expanded(
-                flex: 2,
-                  child: Container(
-                    child: MyTextFormField(
-                      hintText: 'Enter Data Value',
-                      onChange: (value) {
-                        model.data = value;
-                      },
+                  Expanded(
+                    flex: 2,
+                    child: Container(
+                      child: MyTextFormField(
+                        hintText: 'Enter Data Value',
+                        onChange: (value) {
+                          model.data = value;
+                        },
+                      ),
                     ),
                   ),
+                ],
               ),
-              ],),
               FlatButton(
                 onPressed: () async {
-                  var response;
-                  setState(() {
 
+                  setState(() {
                     _isLoading = true;
                   });
                   //write call function
                   debugPrint('Data added ');
-                  response = await _networkService.writeInField(
-                      writeKey: writeKey , fieldValue: model.field, data:model.data);
+                 var response = await _networkService.writeInField(
+                      writeKey: writeKey,
+                      fieldValue: model.field,
+                      data: model.data);
 
                   if (response != null) {
                     print('response: $response');
                     var recData = jsonDecode(response);
-                    model.response=recData;
+                    model.response = recData;
                     showAlertDialog(context, res: model.response);
                     //debugPrint('Response is : $recData');
                     setState(() {
                       _isLoading = false;
                     });
-
                   } else {
                     print('response error');
                     setState(() {
@@ -118,7 +127,8 @@ class _WriteFormState extends State<WriteForm> {
       ),
     );
   }
-  void showAlertDialog(BuildContext context, {var res}){
+
+  void showAlertDialog(BuildContext context, {var res}) {
     // set up the button
     Widget homeButton = FlatButton(
       child: Text("Home"),
@@ -145,7 +155,6 @@ class _WriteFormState extends State<WriteForm> {
       },
     );
   }
-
 }
 
 class MyTextFormField extends StatelessWidget {
