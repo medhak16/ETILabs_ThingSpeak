@@ -22,7 +22,6 @@ class _TestFormState extends State<TestForm> {
 
   String channelId;
   String readKey;
-  
 
   void extractCredentials() async {
     var mChannel = await _databaseService.getChannelId();
@@ -31,16 +30,12 @@ class _TestFormState extends State<TestForm> {
       channelId = mChannel;
       readKey = mreadKey;
     });
-
-    
   }
 
-
-  Future getDataCards () async
-{
-  var dataResponse = await _networkService.getAllResponseAtOnce(
+  Future getDataCards() async {
+    var dataResponse = await _networkService.getAllResponseAtOnce(
         channelId: channelId, readKey: readKey);
-List<ReadContainer> feildCards = [];
+    List<ReadContainer> feildCards = [];
     var recData = jsonDecode(dataResponse);
     String name = recData['channel']['name'];
     String field1 = recData['channel']['field1'];
@@ -55,8 +50,8 @@ List<ReadContainer> feildCards = [];
       print(field);
     }
     return feildCards;
+  }
 
-}
   @override
   void initState() {
     extractCredentials();
@@ -70,12 +65,28 @@ List<ReadContainer> feildCards = [];
 
     return Container(
       child: FutureBuilder(
-      future:getDataCards(),
-      builder: (context,AsyncSnapshot snapshot) {
-      return Column(
-          children: snapshot.data,
-      );
-    }));
+          future: getDataCards(),
+          builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData) {
+              return Column(
+                children: snapshot.data,
+              );
+            } else if (snapshot.hasError) {
+              return Container(
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            } else {
+              return Container(
+
+                child: Center(
+                  child: Text('Loading please wait..'),
+                ),
+              );
+            }
+          }),
+    );
   }
 }
 
