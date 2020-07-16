@@ -21,6 +21,18 @@ class DatabaseService {
  getChannelId() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   //Return String
+  String stringValue =  prefs.getString("channelId");
+  return stringValue;
+}
+getReadKey() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  //Return String
+  String stringValue =  prefs.getString("readKey");
+  return stringValue;
+}
+getWriteKey() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  //Return String
   String stringValue =  prefs.getString("writeKey");
   return stringValue;
 }

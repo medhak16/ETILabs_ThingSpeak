@@ -3,10 +3,10 @@ import 'package:http/http.dart' as http;
 
 class NetworkService {
 //Make a function to READ-ALL fields @ApiKey @channelID
-  Future<String> getAllResponseAtOnce({String channelId, String apiKey}) async {
+  Future<String> getAllResponseAtOnce({String channelId, String readKey}) async {
     //https://api.thingspeak.com/channels/1095647/feeds.json?api_key=S9MEVAKVC879GYZQ&results=2
     String url =
-        'https://api.thingspeak.com/channels/$channelId/feeds.json?api_key=$apiKey&results=2';
+        'https://api.thingspeak.com/channels/$channelId/feeds.json?api_key=$readKey&results=2';
     //print(url);
     var res = await http.get(url);
     if (res.statusCode == 200) {
