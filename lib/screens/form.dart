@@ -33,10 +33,11 @@ class _TestFormState extends State<TestForm> {
   }
 
   Future getDataCards() async {
+     List<ReadContainer> feildCards = [];
     var dataResponse = await _networkService.getAllResponseAtOnce(
         channelId: channelId, readKey: readKey);
-    List<ReadContainer> feildCards = [];
-    var recData = jsonDecode(dataResponse);
+   
+    var recData =  jsonDecode(dataResponse);
     String name = recData['channel']['name'];
     String field1 = recData['channel']['field1'];
     print(recData);
