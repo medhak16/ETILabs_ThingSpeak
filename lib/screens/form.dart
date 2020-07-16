@@ -33,12 +33,13 @@ class _TestFormState extends State<TestForm> {
   }
 
   Future getDataCards() async {
-     List<ReadContainer> feildCards = [];
+    List<ReadContainer> feildCards = [];
     var dataResponse = await _networkService.getAllResponseAtOnce(
         channelId: channelId, readKey: readKey);
-   
-    var recData =  jsonDecode(dataResponse);
-    String name = recData['channel']['name'];
+
+    try {
+      var recData = await jsonDecode(dataResponse);
+      String name = recData['channel']['name'];
     String field1 = recData['channel']['field1'];
     print(recData);
 
@@ -51,6 +52,10 @@ class _TestFormState extends State<TestForm> {
       print(field);
     }
     return feildCards;
+    } catch (e) {
+      print(e.toString());
+    }
+    
   }
 
   @override
@@ -80,7 +85,6 @@ class _TestFormState extends State<TestForm> {
               );
             } else {
               return Container(
-
                 child: Center(
                   child: Text('Loading please wait..'),
                 ),
