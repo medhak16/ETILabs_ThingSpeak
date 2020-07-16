@@ -45,8 +45,13 @@ class _TestFormState extends State<TestForm> {
 
     for (int i = 1; i < 8; i++) {
       String field = recData['channel']['field$i'];
+      var value1 = recData['feeds'][0]['field$i'];
+      var value2 = recData['feeds'][1]['field$i'];
+
       var dataCard = ReadContainer(
         feildData: field,
+        feedValue1: value1,
+        feedValue2: value2,
       );
       feildCards.add(dataCard);
       print(field);
@@ -97,7 +102,8 @@ class _TestFormState extends State<TestForm> {
 
 class ReadContainer extends StatelessWidget {
   final String feildData;
-  ReadContainer({this.feildData});
+  var feedValue1, feedValue2;
+  ReadContainer({this.feildData, this.feedValue1,this.feedValue2});
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +119,7 @@ class ReadContainer extends StatelessWidget {
               child: Container(
                   child: Center(
                       child: Text(
-                'Feild 1',
+                '$feildData',
                 style: kTextFeildHeadings,
               )))),
           Expanded(
@@ -127,7 +133,7 @@ class ReadContainer extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                 child: Text(
-                  '$feildData',
+                  '$feedValue1 , $feedValue2',
                   style: kReadDataStyle,
                 ),
               ),

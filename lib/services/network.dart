@@ -39,9 +39,9 @@ class NetworkService {
   }
 
   //Make a function to Write-IN using @ApiKey @FieldId @dataToWrite
-  Future writeInField ({String apiKey, String fieldValue, var data}) async {
+  Future writeInField ({String writeKey, String fieldValue, var data}) async {
      //debugPrint('data is: $data');
-     String url = 'https://api.thingspeak.com/update?api_key=$apiKey&field$fieldValue=$data';
+     String url = 'https://api.thingspeak.com/update?api_key=$writeKey&field$fieldValue=$data';
      print(url);
      var res = await http.get(url);
      if(res.statusCode==200){
