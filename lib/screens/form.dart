@@ -108,7 +108,7 @@ class ReadContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return feildData==null?Container() : Container(
       margin: EdgeInsets.all(4),
       decoration:
           BoxDecoration(border: Border.all(color: Colors.black, width: 2.0)),
