@@ -4,10 +4,7 @@ import 'package:ui_thingspeak/services/network.dart';
 import 'package:ui_thingspeak/model/responseData.dart';
 import 'package:ui_thingspeak/constant.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import '../constant.dart';
-import '../constant.dart';
 import 'dart:convert';
-import '../constant.dart';
 import 'package:ui_thingspeak/services/database_services.dart';
 
 class TestForm extends StatefulWidget {
@@ -25,6 +22,7 @@ class _TestFormState extends State<TestForm> {
 
   String channelId;
   String readKey;
+  
 
   void extractCredentials() async {
     var mChannel = await _databaseService.getChannelId();
@@ -33,8 +31,32 @@ class _TestFormState extends State<TestForm> {
       channelId = mChannel;
       readKey = mreadKey;
     });
+
+    
   }
 
+
+  Future getDataCards () async
+{
+  var dataResponse = await _networkService.getAllResponseAtOnce(
+        channelId: channelId, readKey: readKey);
+List<ReadContainer> feildCards = [];
+    var recData = jsonDecode(dataResponse);
+    String name = recData['channel']['name'];
+    String field1 = recData['channel']['field1'];
+    print(recData);
+
+    for (int i = 1; i < 8; i++) {
+      String field = recData['channel']['field$i'];
+      var dataCard = ReadContainer(
+        feildData: field,
+      );
+      feildCards.add(dataCard);
+      print(field);
+    }
+    return feildCards;
+
+}
   @override
   void initState() {
     extractCredentials();
@@ -46,67 +68,20 @@ class _TestFormState extends State<TestForm> {
   Widget build(BuildContext context) {
     final halfMediaWidth = MediaQuery.of(context).size.width / 2.0;
 
-    return ModalProgressHUD(
-        inAsyncCall: _isLoading,
-        child: Container(
-          child: Form(
-            key: _formKey,
-            child: ListView(
-              children: <Widget>[
-                SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      'Things Speak',
-                      style: kTextFeildHeadings,
-                    ),
-                    SizedBox(
-                      width: 50,
-                    ),
-                    RaisedButton(
-                        onPressed: () async {
-                          var dataResponse =
-                              await _networkService.getAllResponseAtOnce(
-                                  channelId: channelId, readKey: readKey);
-
-                          var recData = jsonDecode(dataResponse);
-
-                          int id = recData['channel']['id'];
-                          String name = recData['channel']['name'];
-                          String description =
-                              recData['channel']['description'];
-                          String field1_name = recData['channel']['field1'];
-                          String field2_name = recData['channel']['field2'];
-                          String field3_name = recData['channel']['field3'];
-                          print('id $id and $field1_name');
-                          print(recData);
-                        },
-                        child: Text(
-                          'READ',
-                          style: kTextForHomeButtons,
-                        )),
-                  ],
-                ),
-                ReadContainer(),
-                ReadContainer(),
-                ReadContainer(),
-                ReadContainer(),
-                ReadContainer(),
-                ReadContainer(),
-              ],
-            ),
-          ),
-        ));
+    return Container(
+      child: FutureBuilder(
+      future:getDataCards(),
+      builder: (context,AsyncSnapshot snapshot) {
+      return Column(
+          children: snapshot.data,
+      );
+    }));
   }
 }
 
 class ReadContainer extends StatelessWidget {
-  const ReadContainer({
-    Key key,
-  }) : super(key: key);
+  final String feildData;
+  ReadContainer({this.feildData});
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +111,7 @@ class ReadContainer extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                 child: Text(
-                  'Data',
+                  '$feildData',
                   style: kReadDataStyle,
                 ),
               ),
@@ -297,3 +272,32 @@ class MyTextFormField extends StatelessWidget {
 
 //                   ),
 //                 ),
+
+// ListView(
+//         children: <Widget>[
+//           SizedBox(
+//             height: 20,
+//           ),
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             children: <Widget>[
+//               Text(
+//                 'Things Speak',
+//                 style: kTextFeildHeadings,
+//               ),
+//               SizedBox(
+//                 width: 50,
+//               ),
+//               RaisedButton(
+//                   onPressed: () async {},
+//                   child: Text(
+//                     'READ',
+//                     style: kTextForHomeButtons,
+//                   )),
+//             ],
+//           ),
+//           Column(
+//             children: feildCards,
+//           )
+//         ],
+//       ),
