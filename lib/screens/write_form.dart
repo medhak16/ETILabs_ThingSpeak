@@ -4,6 +4,7 @@ import 'package:ui_thingspeak/screens/result.dart';
 import 'package:ui_thingspeak/services/network.dart';
 import 'dart:convert';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:ui_thingspeak/services/database_services.dart';
 
 class WriteForm extends StatefulWidget {
   @override
@@ -15,6 +16,19 @@ class _WriteFormState extends State<WriteForm> {
   bool _isLoading = false;
   Model model = Model();
   NetworkService _networkService = NetworkService();
+  DatabaseService _databaseService = DatabaseService();
+
+  String channelId;
+  String readKey;
+
+  void extractCredentials() async {
+    var mChannel = await _databaseService.getChannelId();
+    var mreadKey = await _databaseService.getReadKey();
+    setState(() {
+      channelId = mChannel;
+      readKey = mreadKey;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

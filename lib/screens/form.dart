@@ -6,6 +6,7 @@ import 'package:ui_thingspeak/constant.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'dart:convert';
 import 'package:ui_thingspeak/services/database_services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TestForm extends StatefulWidget {
   @override
@@ -39,15 +40,25 @@ class _TestFormState extends State<TestForm> {
     var recData = jsonDecode(dataResponse);
     String name = recData['channel']['name'];
     String field1 = recData['channel']['field1'];
+    var value0 = recData['feeds'][0]['field1'];
+    var value1 = recData['feeds'][1]['field1'];
+    print(value0);
+    print(value1);
     print(recData);
 
     for (int i = 1; i < 8; i++) {
       String field = recData['channel']['field$i'];
+      var value1 = recData['feeds'][0]['field$i'];
+      var value2 = recData['feeds'][1]['field$i'];
+
       var dataCard = ReadContainer(
         feildData: field,
+        feedValue1: value1,
+        feedValue2: value2,
       );
       feildCards.add(dataCard);
       print(field);
+      print(value1);
     }
     return feildCards;
   }
@@ -92,7 +103,8 @@ class _TestFormState extends State<TestForm> {
 
 class ReadContainer extends StatelessWidget {
   final String feildData;
-  ReadContainer({this.feildData});
+  var feedValue1, feedValue2;
+  ReadContainer({this.feildData, this.feedValue1, this.feedValue2});
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +120,7 @@ class ReadContainer extends StatelessWidget {
               child: Container(
                   child: Center(
                       child: Text(
-                'Feild 1',
+                '$feildData',
                 style: kTextFeildHeadings,
               )))),
           Expanded(
@@ -122,19 +134,33 @@ class ReadContainer extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                 child: Text(
-                  '$feildData',
+                  '$feedValue1 , $feedValue2',
                   style: kReadDataStyle,
                 ),
               ),
             ),
           ),
           RaisedButton(
-            onPressed: () => print('graph'),
+            onPressed: () {
+              launchURL();
+            },
             child: Text('Graph'),
           )
         ],
       ),
     );
+  }
+
+  void launchURL() async{
+    //String url = 'https://www.google.com/';
+    String url = 'https://thingspeak.com/channels/1095647/charts/2?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15';
+    if(await canLaunch(url)){
+      print(url);
+      await launch(url);
+    }
+    else{
+      throw 'Could not Launch $url';
+    }
   }
 }
 
