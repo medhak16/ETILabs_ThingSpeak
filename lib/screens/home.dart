@@ -123,6 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
               _databaseService.addChannelID(channelId: channelId );
               _databaseService.addReadKey(mReadKey: readKey);
               _databaseService.addWriteKey(mWriteKey: writeKey);
+              showAlertDialog(context);
             },
             child: Container(
               padding: EdgeInsets.all(18.0),
@@ -137,6 +138,21 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+    );
+  }
+  void showAlertDialog(BuildContext context) {
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Credentials Saved!"),
+      content: Text('Now you can read or write using above tabs'),
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

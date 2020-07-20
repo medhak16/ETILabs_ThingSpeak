@@ -56,10 +56,10 @@ class _WriteFormState extends State<WriteForm> {
                       flex: 1,
                       child: Container(
                         child: MyTextFormField(
-                          hintText: 'Enter Field Id',
+                          hintText: 'Field Id',
                           validator: (String value) {
                             if (value.isEmpty) {
-                              return 'Enter a Field id';
+                              return 'Enter Field id';
                             }
                             return null;
                           },
@@ -73,6 +73,12 @@ class _WriteFormState extends State<WriteForm> {
                     child: Container(
                       child: MyTextFormField(
                         hintText: 'Enter Data Value',
+                          validator: (String value) {
+                            if (value.isEmpty) {
+                              return 'First enter Data Value';
+                            }
+                            return null;
+                          },
                         onChange: (value) {
                           model.data = value;
                         },

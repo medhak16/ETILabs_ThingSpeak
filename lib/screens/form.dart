@@ -6,6 +6,7 @@ import 'package:ui_thingspeak/constant.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'dart:convert';
 import 'package:ui_thingspeak/services/database_services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TestForm extends StatefulWidget {
   @override
@@ -53,6 +54,9 @@ class _TestFormState extends State<TestForm> {
         feildData: field,
         feedValue1: value1,
         feedValue2: value2,
+        channelId: channelId,
+        fieldNum: i
+
       );
       feildCards.add(dataCard);
       print(field);
@@ -104,7 +108,9 @@ class _TestFormState extends State<TestForm> {
 class ReadContainer extends StatelessWidget {
   final String feildData;
   var feedValue1, feedValue2;
-  ReadContainer({this.feildData, this.feedValue1,this.feedValue2});
+  String channelId;
+  int fieldNum;
+  ReadContainer({this.feildData, this.feedValue1,this.feedValue2, this.channelId,this.fieldNum});
 
   @override
   Widget build(BuildContext context) {
@@ -141,12 +147,26 @@ class ReadContainer extends StatelessWidget {
             ),
           ),
           RaisedButton(
-            onPressed: () => print('graph'),
+            onPressed: () {
+              launchURL(channelId: channelId, fieldNum: fieldNum);
+            },
             child: Text('Graph'),
           )
         ],
       ),
     );
+  }
+
+  void launchURL({String channelId, int fieldNum}) async{
+    debugPrint('testing : $channelId and $fieldNum');
+    String url = 'https://thingspeak.com/channels/$channelId/charts/$fieldNum?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15';
+    if(await canLaunch(url)){
+      print(url);
+      await launch(url);
+    }
+    else{
+      throw 'could not launch $url';
+    }
   }
 }
 
