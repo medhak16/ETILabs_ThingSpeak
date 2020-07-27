@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ui_thingspeak/model/data_model.dart';
-import 'package:ui_thingspeak/screens/result.dart';
 import 'package:ui_thingspeak/services/network.dart';
 import 'dart:convert';
 import 'package:ui_thingspeak/constant.dart';
@@ -19,19 +18,17 @@ class _WriteFormState extends State<WriteForm> {
   NetworkService _networkService = NetworkService();
   DatabaseService _databaseService = DatabaseService();
 
-  //String channelId;
   String writeKey;
 
   void extractCredentials() async {
-    //var mChannel = await _databaseService.getChannelId();
     var mwriteKey = await _databaseService.getWriteKey();
     setState(() {
       print(mwriteKey);
-      //channelId = mChannel;
       writeKey = mwriteKey;
     });
     // print(writeKey);
   }
+
   @override
   void initState() {
     extractCredentials();
@@ -46,91 +43,80 @@ class _WriteFormState extends State<WriteForm> {
     return ModalProgressHUD(
       inAsyncCall: _isLoading,
       child: Container(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Expanded(
-                      flex: 1,
-                      child: Container(
-                        child: MyTextFormField(
-                          hintText: 'Field Id',
-                          validator: (String value) {
-                            if (value.isEmpty) {
-                              return 'Enter Field id';
-                            }
-                            return null;
-                          },
-                          onChange: (value) {
-                            model.field = value;
-                          },
-                        ),
-                      )),
-                  Expanded(
-                    flex: 2,
-                    child: Container(
-                      child: MyTextFormField(
-                        hintText: 'Enter Data Value',
-                          validator: (String value) {
-                            if (value.isEmpty) {
-                              return 'First enter Data Value';
-                            }
-                            return null;
-                          },
-                        onChange: (value) {
-                          model.data = value;
-                        },
-                      ),
+          child: Form(
+              key: _formKey,
+              child: Center(
+                child: ListView(
+                  children: <Widget>[
+                    SizedBox(height: 20.0),
+                    MyTextFormField(
+                      hintText: 'Field Id',
+                      validator: (String value) {
+                        if (value.isEmpty) {
+                          return 'Enter Field id';
+                        }
+                        return null;
+                      },
+                      onChange: (value) {
+                        model.field = value;
+                      },
                     ),
-                  ),
-                ],
-              ),
-              FlatButton(
-                onPressed: () async {
+                    SizedBox(height: 20.0),
+                    MyTextFormField(
+                      hintText: 'Enter Data Value',
+                      validator: (String value) {
+                        if (value.isEmpty) {
+                          return 'First enter Data Value';
+                        }
+                        return null;
+                      },
+                      onChange: (value) {
+                        model.data = value;
+                      },
+                    ),
+                    SizedBox(height: 20.0),
+                    FlatButton(
+                      onPressed: () async {
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        //write call function
+                        debugPrint('Data added ');
+                        var response = await _networkService.writeInField(
+                            writeKey: writeKey,
+                            fieldValue: model.field,
+                            data: model.data);
 
-                  setState(() {
-                    _isLoading = true;
-                  });
-                  //write call function
-                  debugPrint('Data added ');
-                 var response = await _networkService.writeInField(
-                      writeKey: writeKey,
-                      fieldValue: model.field,
-                      data: model.data);
-
-                  if (response != null) {
-                    print('response: $response');
-                    var recData = jsonDecode(response);
-                    model.response = recData;
-                    showAlertDialog(context, res: model.response);
-                    //debugPrint('Response is : $recData');
-                    setState(() {
-                      _isLoading = false;
-                    });
-                  } else {
-                    print('response error');
-                    setState(() {
-                      _isLoading = false;
-                    });
-                  }
-                },
-                child: Container(
-                  padding: EdgeInsets.all(18.0),
-                  decoration: BoxDecoration(
-                      color: Colors.blueGrey,
-                      borderRadius: BorderRadius.circular(18.0)),
-                  child: Text(
-                    'Write',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                        if (response != null) {
+                          print('response: $response');
+                          var recData = jsonDecode(response);
+                          model.response = recData;
+                          showAlertDialog(context, res: model.response);
+                          //debugPrint('Response is : $recData');
+                          setState(() {
+                            _isLoading = false;
+                          });
+                        } else {
+                          print('response error');
+                          setState(() {
+                            _isLoading = false;
+                          });
+                        }
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(18.0),
+                        decoration: BoxDecoration(
+                            color: Colors.blueGrey,
+                            borderRadius: BorderRadius.circular(18.0)),
+                        child: Text(
+                          'Write',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-              )
-            ],
-          ),
-        ),
-      ),
+                ))),
     );
   }
 

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:ui_thingspeak/constant.dart';
-import 'package:ui_thingspeak/screens/result.dart';
 import '../constant.dart';
 import 'package:ui_thingspeak/screens/form.dart';
 import 'package:ui_thingspeak/screens/write_form.dart';
 import 'package:ui_thingspeak/services/database_services.dart';
-
 
 import 'form.dart';
 import 'write_form.dart';
