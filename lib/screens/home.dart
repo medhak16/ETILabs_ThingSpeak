@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ui_thingspeak/constant.dart';
 import '../constant.dart';
+import 'package:ui_thingspeak/model/data_model.dart';
 import 'package:ui_thingspeak/screens/form.dart';
 import 'package:ui_thingspeak/screens/write_form.dart';
 import 'package:ui_thingspeak/services/database_services.dart';
@@ -60,6 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String readKey;
   String writeKey;
 
+  Model model = Model();
   DatabaseService _databaseService = DatabaseService();
   
 
@@ -95,6 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
               return null;
             },
             onChange: (value) {
+              model.r_key=value;
               setState(() {
                 readKey = value;
               });
@@ -110,6 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
               return null;
             },
             onChange: (value) {
+              model.w_key=value;
               setState(() {
                 writeKey = value;
               });

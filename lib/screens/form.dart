@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import 'package:ui_thingspeak/model/data_model.dart';
 import 'package:ui_thingspeak/services/network.dart';
 //import 'package:ui_thingspeak/model/responseData.dart';
@@ -27,6 +28,7 @@ class _TestFormState extends State<TestForm> {
     var mreadKey = await _databaseService.getReadKey();
     setState(() {
       channelId = mChannel;
+      print(mreadKey);
       readKey = mreadKey;
     });
   }
@@ -53,7 +55,8 @@ class _TestFormState extends State<TestForm> {
         feedValue1: value1,
         feedValue2: value2,
         channelId: channelId,
-        fieldNum: i
+        fieldNum: i,
+        api_key: readKey,
 
       );
       feildCards.add(dataCard);
@@ -108,7 +111,8 @@ class ReadContainer extends StatelessWidget {
   var feedValue1, feedValue2;
   String channelId;
   int fieldNum;
-  ReadContainer({this.feildData, this.feedValue1,this.feedValue2, this.channelId,this.fieldNum});
+  String api_key;
+  ReadContainer({this.feildData, this.feedValue1,this.feedValue2, this.channelId,this.fieldNum,this.api_key});
 
   @override
   Widget build(BuildContext context) {
@@ -146,7 +150,12 @@ class ReadContainer extends StatelessWidget {
           ),
           RaisedButton(
             onPressed: () {
-              launchURL(channelId: channelId, fieldNum: fieldNum);
+              print('inside button');
+              /*WebView(
+                initialUrl: 'https://www.google.com/',
+                  javascriptMode: JavascriptMode.unrestricted,
+              );*/
+              launchURL(channelId: channelId, fieldNum: fieldNum, key: api_key);
             },
             child: Text('Graph'),
           )
@@ -155,9 +164,9 @@ class ReadContainer extends StatelessWidget {
     );
   }
 
-  void launchURL({String channelId, int fieldNum}) async{
-    debugPrint('testing : $channelId and $fieldNum');
-    String url = 'https://thingspeak.com/channels/$channelId/charts/$fieldNum?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15';
+  void launchURL({String channelId, int fieldNum, var key }) async{
+    debugPrint('testing : $channelId and $fieldNum and $key');
+    String url = 'https://thingspeak.com/channels/$channelId/charts/$fieldNum?api_key=$key&bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15';
     if(await canLaunch(url)){
       print(url);
       await launch(url);
